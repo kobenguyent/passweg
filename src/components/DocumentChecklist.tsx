@@ -11,20 +11,27 @@ import {
   Users,
   Baby
 } from 'lucide-react';
-import { Language } from '../types';
-import { documentsData } from '../data/documentsData';
+import { Language, CountryCode } from '../types';
+import { getDocumentsForCountry } from '../data/portalData';
+import { countriesConfig } from '../data/countriesConfig';
 import { getStoredChecklist, saveStoredChecklist } from '../utils/storage';
 import { triggerCelebration } from '../utils/confetti';
 
 interface DocumentChecklistProps {
   language: Language;
+  currentCountry: CountryCode;
 }
 
-export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({ language }) => {
+export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({ language, currentCountry }) => {
   const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>({});
   const [employmentFilter, setEmploymentFilter] = useState<'all' | 'employed' | 'freelance'>('employed');
   const [isMarried, setIsMarried] = useState<boolean>(false);
   const [hasChildren, setHasChildren] = useState<boolean>(false);
+
+  const activeDocuments = useMemo(() => {
+    return getDocumentsForCountry(currentCountry);
+  }, [currentCountry]);
+  const meta = countriesConfig[currentCountry];
 
   useEffect(() => {
     setCheckedMap(getStoredChecklist());
@@ -51,7 +58,7 @@ export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({ language }
   };
 
   const filteredDocs = useMemo(() => {
-    return documentsData.filter((doc) => {
+    return activeDocuments.filter((doc) => {
       // Check employment requirement
       if (doc.requiredFor.includes('all')) {
         // ok
@@ -101,7 +108,7 @@ export const DocumentChecklist: React.FC<DocumentChecklistProps> = ({ language }
             <span>{language === 'en' ? 'Interactive Document Tracker' : 'Interaktiver Unterlagen-Manager'}</span>
           </div>
           <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-            {language === 'en' ? 'Customized Document Checklist' : 'Maßgeschneiderte Dokumenten-Checkliste'}
+            {meta.flag} {language === 'en' ? `${meta.name.en} Document Checklist` : `Dokumenten-Checkliste (${meta.name.de})`}
           </h2>
           <p className="mt-2 text-slate-600 text-sm">
             {language === 'en'

@@ -7,19 +7,39 @@ vi.mock('canvas-confetti', () => ({
   default: vi.fn(),
 }));
 
-describe('PassWeg Application Component Suite', () => {
+describe('PassWeg Multi-Country Application Component Suite', () => {
   beforeEach(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
       window.localStorage.clear();
     }
   });
 
-  it('renders navbar brand and hero headline', () => {
+  it('renders navbar brand and hero headline for default country (Germany)', () => {
     render(<App />);
     const brandElements = screen.getAllByText((_, element) => element?.textContent === 'PassWeg');
     expect(brandElements.length).toBeGreaterThan(0);
     const heroPassports = screen.getAllByText(/German Passport/i);
     expect(heroPassports.length).toBeGreaterThan(0);
+  });
+
+  it('switches destination country to United States (US)', () => {
+    render(<App />);
+    const usButtons = screen.getAllByText(/United States/i);
+    expect(usButtons.length).toBeGreaterThan(0);
+    fireEvent.click(usButtons[0]);
+
+    const usPassports = screen.getAllByText(/U.S. Passport/i);
+    expect(usPassports.length).toBeGreaterThan(0);
+  });
+
+  it('switches destination country to Australia (AU)', () => {
+    render(<App />);
+    const auButtons = screen.getAllByText(/Australia/i);
+    expect(auButtons.length).toBeGreaterThan(0);
+    fireEvent.click(auButtons[0]);
+
+    const auPassports = screen.getAllByText(/Australian Passport/i);
+    expect(auPassports.length).toBeGreaterThan(0);
   });
 
   it('allows switching language from English to German', () => {
@@ -35,11 +55,11 @@ describe('PassWeg Application Component Suite', () => {
   it('switches navigation tab to Eligibility Calculator', () => {
     render(<App />);
     const buttons = screen.getAllByRole('button');
-    const eligibilityBtn = buttons.find(b => b.textContent?.includes('Eligibility') || b.textContent?.includes('Check My Eligibility'));
+    const eligibilityBtn = buttons.find(b => b.textContent?.includes('Eligibility') || b.textContent?.includes('Check Eligibility'));
     expect(eligibilityBtn).toBeDefined();
     if (eligibilityBtn) {
       fireEvent.click(eligibilityBtn);
-      expect(screen.getByText(/German Citizenship Eligibility Calculator/i)).toBeInTheDocument();
+      expect(screen.getByText(/Citizenship Eligibility Calculator/i)).toBeInTheDocument();
     }
   });
 
@@ -50,7 +70,7 @@ describe('PassWeg Application Component Suite', () => {
     expect(checklistBtn).toBeDefined();
     if (checklistBtn) {
       fireEvent.click(checklistBtn);
-      expect(screen.getByText(/Customized Document Checklist/i)).toBeInTheDocument();
+      expect(screen.getByText(/Interactive Document Tracker/i)).toBeInTheDocument();
     }
   });
 
@@ -61,17 +81,17 @@ describe('PassWeg Application Component Suite', () => {
     expect(lettersBtn).toBeDefined();
     if (lettersBtn) {
       fireEvent.click(lettersBtn);
-      expect(screen.getByText(/Official Correspondence Templates/i)).toBeInTheDocument();
+      expect(screen.getByText(/Legal Letter Generator/i)).toBeInTheDocument();
     }
   });
 
-  it('switches navigation tab to US & Australia Country Guide', () => {
+  it('switches navigation tab to Dual Nationality Hub', () => {
     render(<App />);
     const buttons = screen.getAllByRole('button');
-    const countryBtn = buttons.find(b => b.textContent?.includes('US & Australia'));
-    expect(countryBtn).toBeDefined();
-    if (countryBtn) {
-      fireEvent.click(countryBtn);
+    const dualBtn = buttons.find(b => b.textContent?.includes('Dual Nationality') || b.textContent?.includes('Doppelpass'));
+    expect(dualBtn).toBeDefined();
+    if (dualBtn) {
+      fireEvent.click(dualBtn);
       expect(screen.getByText(/Dual Citizenship for US & Australian Citizens/i)).toBeInTheDocument();
     }
   });

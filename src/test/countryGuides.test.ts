@@ -27,7 +27,7 @@ describe('US & Australian Citizenship Guides (Dual Nationality)', () => {
     expect(usGuide.apostilleGuide.authority).toContain('Secretary of State');
     expect(usGuide.travelRules.statutoryLaw).toContain('8 U.S.C.');
     
-    const fbarObligation = usGuide.taxAndFinance.keyObligations.find(o => o.title.includes('FBAR'));
+    const fbarObligation = usGuide.taxAndFinance.keyObligations.find((o: { title: string }) => o.title.includes('FBAR'));
     expect(fbarObligation).toBeDefined();
     expect(fbarObligation?.desc.en).toContain('$10,000');
   });
@@ -37,7 +37,7 @@ describe('US & Australian Citizenship Guides (Dual Nationality)', () => {
     expect(auGuide.apostilleGuide.authority).toContain('DFAT');
     expect(auGuide.dualCitizenshipLegality.legalBasis).toContain('Section 17');
     
-    const superObligation = auGuide.taxAndFinance.keyObligations.find(o => o.title.includes('Superannuation'));
+    const superObligation = auGuide.taxAndFinance.keyObligations.find((o: { title: string }) => o.title.includes('Superannuation'));
     expect(superObligation).toBeDefined();
     expect(superObligation?.desc.en).toContain('superannuation');
   });

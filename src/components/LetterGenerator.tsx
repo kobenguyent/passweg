@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
 import { Mail, Copy, Check, Download, AlertCircle, FileText } from 'lucide-react';
-import { Language } from '../types';
-import { letterTemplates } from '../data/letterTemplates';
+import { Language, CountryCode } from '../types';
+import { getLettersForCountry } from '../data/portalData';
+import { countriesConfig } from '../data/countriesConfig';
 
 interface LetterGeneratorProps {
   language: Language;
+  currentCountry: CountryCode;
 }
 
-export const LetterGenerator: React.FC<LetterGeneratorProps> = ({ language }) => {
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string>(letterTemplates[0].id);
+export const LetterGenerator: React.FC<LetterGeneratorProps> = ({ language, currentCountry }) => {
+  const templates = getLettersForCountry(currentCountry);
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>(templates[0]?.id || '');
   const [formFields, setFormFields] = useState<Record<string, string>>({});
   const [copied, setCopied] = useState<boolean>(false);
 
-  const currentTemplate = letterTemplates.find((t) => t.id === selectedTemplateId) || letterTemplates[0];
+  const currentTemplate = templates.find((t) => t.id === selectedTemplateId) || templates[0];
+  const meta = countriesConfig[currentCountry];
 
   const handleFieldChange = (fieldId: string, value: string) => {
     setFormFields((prev) => ({ ...prev, [fieldId]: value }));
@@ -50,7 +54,7 @@ export const LetterGenerator: React.FC<LetterGeneratorProps> = ({ language }) =>
             <span>{language === 'en' ? 'Legal Letter Generator' : 'Behörden-Briefgenerator'}</span>
           </div>
           <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-            {language === 'en' ? 'Official Correspondence Templates' : 'Rechtssichere Musterbriefe'}
+            {meta.flag} {language === 'en' ? `${meta.name.en} Official Letter Templates` : `Musterbriefe (${meta.name.de})`}
           </h2>
           <p className="mt-2 text-slate-600 text-sm">
             {language === 'en'
@@ -61,7 +65,7 @@ export const LetterGenerator: React.FC<LetterGeneratorProps> = ({ language }) =>
 
         {/* Template Selector Tabs */}
         <div className="flex flex-wrap gap-2 justify-center mb-8">
-          {letterTemplates.map((template) => {
+          {templates.map((template) => {
             const isSelected = selectedTemplateId === template.id;
             return (
               <button

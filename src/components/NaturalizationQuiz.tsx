@@ -9,23 +9,27 @@ import {
   ChevronRight,
   ShieldAlert
 } from 'lucide-react';
-import { Language } from '../types';
-import { quizData } from '../data/quizData';
+import { Language, CountryCode } from '../types';
+import { getQuizForCountry } from '../data/portalData';
+import { countriesConfig } from '../data/countriesConfig';
 import { triggerCelebration } from '../utils/confetti';
 import { saveStoredQuizScore } from '../utils/storage';
 
 interface NaturalizationQuizProps {
   language: Language;
+  currentCountry: CountryCode;
 }
 
-export const NaturalizationQuiz: React.FC<NaturalizationQuizProps> = ({ language }) => {
+export const NaturalizationQuiz: React.FC<NaturalizationQuizProps> = ({ language, currentCountry }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
   const [showExplanation, setShowExplanation] = useState<boolean>(false);
   const [isFinished, setIsFinished] = useState<boolean>(false);
 
-  const currentQ = quizData[currentIndex];
-  const totalQuestions = quizData.length;
+  const quizQuestions = getQuizForCountry(currentCountry);
+  const currentQ = quizQuestions[currentIndex] || quizQuestions[0];
+  const totalQuestions = quizQuestions.length;
+  const meta = countriesConfig[currentCountry];
 
   const handleSelectOption = (optionIndex: number) => {
     if (selectedAnswers[currentQ.id] !== undefined) return; // already answered
@@ -39,7 +43,7 @@ export const NaturalizationQuiz: React.FC<NaturalizationQuizProps> = ({ language
       setTimeout(() => {
         setIsFinished(true);
         const correctCount = Object.keys(updated).filter(
-          id => updated[Number(id)] === quizData.find(q => q.id === Number(id))?.correctIndex
+          id => updated[Number(id)] === quizQuestions.find(q => q.id === Number(id))?.correctIndex
         ).length;
         saveStoredQuizScore(correctCount, totalQuestions);
         if (correctCount >= Math.ceil(totalQuestions * 0.515)) {
@@ -66,7 +70,7 @@ export const NaturalizationQuiz: React.FC<NaturalizationQuizProps> = ({ language
   };
 
   const score = Object.keys(selectedAnswers).filter(
-    id => selectedAnswers[Number(id)] === quizData.find(q => q.id === Number(id))?.correctIndex
+    id => selectedAnswers[Number(id)] === quizQuestions.find(q => q.id === Number(id))?.correctIndex
   ).length;
 
   const isPassing = score >= Math.ceil(totalQuestions * 0.515);
@@ -78,15 +82,15 @@ export const NaturalizationQuiz: React.FC<NaturalizationQuizProps> = ({ language
         <div className="text-center max-w-xl mx-auto mb-8">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 text-purple-900 text-xs font-bold mb-3">
             <GraduationCap className="w-3.5 h-3.5 text-purple-700" />
-            <span>{language === 'en' ? 'BAMF Test Simulator (33 Qs Format)' : 'BAMF Einbürgerungstest Simulator'}</span>
+            <span>{meta.flag} {meta.name[language]} {language === 'en' ? 'Exam Simulator' : 'Prüfungssimulator'}</span>
           </div>
           <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-            {language === 'en' ? 'Naturalization Exam Practice' : 'Einbürgerungstest Prüfungstrainer'}
+            {meta.flag} {language === 'en' ? `${meta.name.en} Citizenship Practice Test` : `Einbürgerungstest (${meta.name.de})`}
           </h2>
           <p className="mt-2 text-slate-600 text-sm">
             {language === 'en'
-              ? 'Test your knowledge on the German constitution, history, and the new 2024 additions on antisemitism & democratic values.'
-              : 'Offizielle Prüfungsfragen zu Grundgesetz, Geschichte und den neuen 2024er-Fragen zu Antisemitismus und Demokratie.'}
+              ? `Practice official civics, constitution, and values questions for ${meta.name.en}.`
+              : `Offizielle Prüfungsfragen zu Verfassung, Geschichte und Werten (${meta.name.de}).`}
           </p>
         </div>
 
@@ -98,10 +102,10 @@ export const NaturalizationQuiz: React.FC<NaturalizationQuizProps> = ({ language
                 {language === 'en' ? 'Question' : 'Frage'} {currentIndex + 1} / {totalQuestions}
               </span>
               <div className="flex items-center gap-2">
-                {currentQ.is2024New && (
+                {(currentQ.is2024New || currentQ.isSpecialBenchmark) && (
                   <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold border border-amber-200 flex items-center gap-1">
                     <Sparkles className="w-2.5 h-2.5" />
-                    {language === 'en' ? 'New 2024 Reform Q' : 'Neue Reformfrage 2024'}
+                    {language === 'en' ? 'Key Benchmark Question' : 'Wichtige Schwerpunktfrage'}
                   </span>
                 )}
                 <span className="text-passport-800 font-mono">

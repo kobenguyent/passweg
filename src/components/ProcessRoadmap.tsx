@@ -10,15 +10,19 @@ import {
   ExternalLink,
   Milestone
 } from 'lucide-react';
-import { Language } from '../types';
-import { roadmapSteps } from '../data/roadmapData';
+import { Language, CountryCode } from '../types';
+import { getRoadmapForCountry } from '../data/portalData';
+import { countriesConfig } from '../data/countriesConfig';
 
 interface ProcessRoadmapProps {
   language: Language;
+  currentCountry: CountryCode;
 }
 
-export const ProcessRoadmap: React.FC<ProcessRoadmapProps> = ({ language }) => {
+export const ProcessRoadmap: React.FC<ProcessRoadmapProps> = ({ language, currentCountry }) => {
   const [expandedStep, setExpandedStep] = useState<number | null>(1);
+  const steps = getRoadmapForCountry(currentCountry);
+  const meta = countriesConfig[currentCountry];
 
   const toggleStep = (id: number) => {
     setExpandedStep(expandedStep === id ? null : id);
@@ -31,21 +35,23 @@ export const ProcessRoadmap: React.FC<ProcessRoadmapProps> = ({ language }) => {
         <div className="text-center max-w-2xl mx-auto mb-12">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-xs font-bold mb-3">
             <Milestone className="w-3.5 h-3.5 text-passport-800" />
-            <span>{language === 'en' ? 'End-to-End Timeline' : 'Vollständiger Ablauf'}</span>
+            <span>{meta.flag} {language === 'en' ? 'End-to-End Timeline' : 'Vollständiger Ablauf'}</span>
           </div>
           <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-            {language === 'en' ? 'The 7 Stages of Naturalization' : 'Die 7 Schritte zur Einbürgerung'}
+            {language === 'en' 
+              ? `${meta.name.en} Citizenship Roadmap (${steps.length} Stages)` 
+              : `Ablauf der Einbürgerung (${meta.name.de})`}
           </h2>
           <p className="mt-2 text-slate-600 text-sm">
             {language === 'en'
-              ? 'From initial eligibility assessment to receiving your burgundy German passport.'
-              : 'Von der ersten Selbsteinschätzung bis zur Entgegennahme des roten Reisepasses.'}
+              ? `From initial self-assessment to receiving your ${meta.name.en} passport.`
+              : `Vom ersten Schritt bis zum Erhalt des Reisepasses (${meta.name.de}).`}
           </p>
         </div>
 
         {/* Timeline Stack */}
         <div className="relative border-l-2 border-passport-800/20 ml-4 sm:ml-8 space-y-6">
-          {roadmapSteps.map((step) => {
+          {steps.map((step) => {
             const isExpanded = expandedStep === step.id;
 
             return (

@@ -10,21 +10,29 @@ import {
   FileText, 
   Compass 
 } from 'lucide-react';
-import { Language } from '../types';
-import { tipsData } from '../data/tipsData';
+import { Language, CountryCode } from '../types';
+import { getTipsForCountry } from '../data/portalData';
+import { countriesConfig } from '../data/countriesConfig';
 
 interface TipsAndTricksProps {
   language: Language;
+  currentCountry: CountryCode;
   onNavigateToLetters: () => void;
 }
 
 export const TipsAndTricks: React.FC<TipsAndTricksProps> = ({
   language,
+  currentCountry,
   onNavigateToLetters,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [expandedTipId, setExpandedTipId] = useState<string | null>('untaetigkeitsklage-75');
+  const [expandedTipId, setExpandedTipId] = useState<string | null>(null);
+
+  const tipsList = useMemo(() => {
+    return getTipsForCountry(currentCountry);
+  }, [currentCountry]);
+  const meta = countriesConfig[currentCountry];
 
   const categories = [
     { id: 'all', label: { en: 'All Tips', de: 'Alle Tipps' }, icon: Sparkles },
@@ -36,7 +44,7 @@ export const TipsAndTricks: React.FC<TipsAndTricksProps> = ({
   ];
 
   const filteredTips = useMemo(() => {
-    return tipsData.filter((tip) => {
+    return tipsList.filter((tip) => {
       const matchesCat = selectedCategory === 'all' || tip.category === selectedCategory;
       const matchesSearch = 
         searchQuery.trim() === '' ||
@@ -57,7 +65,7 @@ export const TipsAndTricks: React.FC<TipsAndTricksProps> = ({
             <span>{language === 'en' ? 'Insider Knowledge Base' : 'Insider-Wissen & Taktiken'}</span>
           </div>
           <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-            {language === 'en' ? 'Tips, Tricks & Bureaucracy Hacks' : 'Tipps, Tricks & Behörden-Hacks'}
+            {meta.flag} {language === 'en' ? `${meta.name.en} Tips, Tricks & Hacks` : `Tipps & Tricks (${meta.name.de})`}
           </h2>
           <p className="mt-2 text-slate-600 text-sm sm:text-base">
             {language === 'en'

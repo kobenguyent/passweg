@@ -1,12 +1,15 @@
 import React from 'react';
-import { Compass, FileCheck, CheckCircle2, Lightbulb, GraduationCap, Mail, Building2, Globe, Globe2 } from 'lucide-react';
-import { Language } from '../types';
+import { Compass, FileCheck, CheckCircle2, Lightbulb, GraduationCap, Mail, Building2, Globe, Sparkles } from 'lucide-react';
+import { Language, CountryCode } from '../types';
+import { countriesConfig } from '../data/countriesConfig';
 
 interface NavbarProps {
   currentTab: string;
   setCurrentTab: (tab: string) => void;
   language: Language;
   setLanguage: (lang: Language) => void;
+  currentCountry: CountryCode;
+  setCurrentCountry: (country: CountryCode) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -14,16 +17,27 @@ export const Navbar: React.FC<NavbarProps> = ({
   setCurrentTab,
   language,
   setLanguage,
+  currentCountry,
+  setCurrentCountry,
 }) => {
+  const meta = countriesConfig[currentCountry];
+
   const navItems = [
     { id: 'roadmap', label: { en: 'Roadmap', de: 'Ablauf' }, icon: Compass },
     { id: 'calculator', label: { en: 'Eligibility', de: 'Voraussetzungen' }, icon: CheckCircle2 },
-    { id: 'countries', label: { en: 'US & Australia', de: 'USA & Australien' }, icon: Globe2 },
     { id: 'checklist', label: { en: 'Checklist', de: 'Unterlagen' }, icon: FileCheck },
     { id: 'tips', label: { en: 'Tips & Hacks', de: 'Tipps & Tricks' }, icon: Lightbulb },
-    { id: 'quiz', label: { en: 'Practice Quiz', de: 'Einbürgerungstest' }, icon: GraduationCap },
+    { 
+      id: 'quiz', 
+      label: { 
+        en: currentCountry === 'de' ? 'Einbürgerungstest' : currentCountry === 'us' ? 'Civics Test' : 'Values Test', 
+        de: currentCountry === 'de' ? 'Einbürgerungstest' : currentCountry === 'us' ? 'Civics-Test' : 'Werte-Test' 
+      }, 
+      icon: GraduationCap 
+    },
     { id: 'letters', label: { en: 'Letter Templates', de: 'Briefvorlagen' }, icon: Mail },
-    { id: 'cities', label: { en: 'Cities', de: 'Städte-Guide' }, icon: Building2 },
+    ...(currentCountry === 'de' ? [{ id: 'cities', label: { en: 'Cities', de: 'Städte-Guide' }, icon: Building2 }] : []),
+    { id: 'countries', label: { en: 'Dual Nationality', de: 'Doppelpass' }, icon: Sparkles },
   ];
 
   return (
@@ -35,26 +49,53 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="flex items-center gap-3 cursor-pointer group"
             onClick={() => setCurrentTab('roadmap')}
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-passport-800 to-passport-950 flex items-center justify-center shadow-md shadow-passport-900/20 group-hover:scale-105 transition-transform">
-              <span className="text-eagleGold-400 font-extrabold text-xl font-mono">PW</span>
+            <div 
+              className="w-10 h-10 rounded-xl flex items-center justify-center shadow-md transition-transform group-hover:scale-105"
+              style={{ backgroundColor: meta.passportColor }}
+            >
+              <span className="text-white font-extrabold text-sm font-mono">
+                {meta.flag}
+              </span>
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xl font-extrabold tracking-tight text-slate-900 group-hover:text-passport-800 transition-colors">
                   Pass<span className="text-passport-800">Weg</span>
                 </span>
-                <span className="hidden sm:inline-block px-2 py-0.5 text-[11px] font-semibold bg-emerald-100 text-emerald-800 rounded-full border border-emerald-200">
-                  StAG 2024
+                <span className="px-2 py-0.5 text-[11px] font-semibold bg-slate-100 text-slate-800 rounded-full border border-slate-200">
+                  {meta.name[language]}
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 hidden md:block">
-                {language === 'en' ? 'The Modern German Citizenship Guide' : 'Der smarte Wegweiser zum deutschen Pass'}
+                {meta.governingLaw}
               </p>
             </div>
           </div>
 
+          {/* Desktop Country Switcher */}
+          <div className="hidden md:flex items-center bg-slate-100 p-1 rounded-xl gap-1">
+            {(['de', 'us', 'au'] as CountryCode[]).map((cCode) => {
+              const c = countriesConfig[cCode];
+              const isSelected = currentCountry === cCode;
+              return (
+                <button
+                  key={cCode}
+                  onClick={() => setCurrentCountry(cCode)}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                    isSelected
+                      ? 'bg-white text-slate-900 shadow-sm ring-1 ring-slate-200'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  <span>{c.flag}</span>
+                  <span>{c.name[language]}</span>
+                </button>
+              );
+            })}
+          </div>
+
           {/* Desktop Nav Items */}
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden xl:flex items-center gap-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentTab === item.id;
@@ -62,9 +103,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => setCurrentTab(item.id)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                     isActive
-                      ? 'bg-passport-800 text-white shadow-sm'
+                      ? 'bg-slate-900 text-white shadow-sm'
                       : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100'
                   }`}
                 >
@@ -88,7 +129,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => setCurrentTab('calculator')}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-passport-800 to-passport-900 text-white text-xs font-semibold shadow hover:shadow-md hover:brightness-110 transition-all border border-passport-700"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow hover:shadow-md transition-all"
             >
               <CheckCircle2 className="w-3.5 h-3.5 text-eagleGold-400" />
               <span>{language === 'en' ? 'Check Eligibility' : 'Sofort-Check'}</span>
@@ -96,26 +137,43 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Mobile Submenu Bar */}
-        <div className="lg:hidden flex items-center gap-1 overflow-x-auto py-2 border-t border-slate-100 no-scrollbar">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = currentTab === item.id;
-            return (
+        {/* Mobile Submenu & Country Switcher */}
+        <div className="md:hidden flex items-center justify-between py-2 border-t border-slate-100 gap-2">
+          {/* Mobile Country selector */}
+          <div className="flex items-center bg-slate-100 p-0.5 rounded-lg gap-1">
+            {(['de', 'us', 'au'] as CountryCode[]).map((cCode) => (
               <button
-                key={item.id}
-                onClick={() => setCurrentTab(item.id)}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors ${
-                  isActive
-                    ? 'bg-passport-800 text-white'
-                    : 'text-slate-600 hover:bg-slate-100'
+                key={cCode}
+                onClick={() => setCurrentCountry(cCode)}
+                className={`px-2 py-1 rounded text-xs font-bold ${
+                  currentCountry === cCode ? 'bg-white shadow-xs' : 'text-slate-500'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-eagleGold-400' : 'text-slate-400'}`} />
-                {item.label[language]}
+                {countriesConfig[cCode].flag}
               </button>
-            );
-          })}
+            ))}
+          </div>
+
+          <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = currentTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setCurrentTab(item.id)}
+                  className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium whitespace-nowrap transition-colors ${
+                    isActive
+                      ? 'bg-slate-900 text-white'
+                      : 'text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  <Icon className="w-3 h-3" />
+                  {item.label[language]}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
     </header>

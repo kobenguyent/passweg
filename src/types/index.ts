@@ -1,5 +1,7 @@
 export type Language = 'en' | 'de';
+export type CountryCode = 'de' | 'us' | 'au';
 
+// --- GERMANY (StAG 2024) ---
 export type ResidencePermitType = 
   | 'blue_card'
   | 'settlement' // Niederlassungserlaubnis
@@ -25,19 +27,21 @@ export type EmploymentStatus =
 
 export type CountryOrigin = 'all' | 'us' | 'au' | 'other';
 
-export interface EligibilityInput {
+export interface DEEligibilityInput {
   yearsInGermany: number;
   permitType: ResidencePermitType;
   languageLevel: LanguageLevel;
-  hasSpecialIntegration: boolean; // e.g. volunteer work (Ehrenamt), academic/professional excellence
+  hasSpecialIntegration: boolean;
   employmentStatus: EmploymentStatus;
   passedEinbuergerungstest: boolean;
-  hasCleanCriminalRecord: boolean; // No conviction over 90 daily fines (Tagessätze)
+  hasCleanCriminalRecord: boolean;
   isMarriedToGerman: boolean;
   yearsMarried?: number;
   acceptsDemocraticOrder: boolean;
   countryOfOrigin?: CountryOrigin;
 }
+
+export type EligibilityInput = DEEligibilityInput;
 
 export type EligibilityTrack = 
   | 'turbo_3_year' // StAG § 10 Abs. 3 (3 years + C1 + special integration)
@@ -45,18 +49,37 @@ export type EligibilityTrack =
   | 'spousal_3_year' // StAG § 9 (3 years in Germany + 2 years marriage to German citizen)
   | 'not_yet_eligible';
 
+// --- UNITED STATES (INA § 316 / § 319 Form N-400) ---
+export interface USEligibilityInput {
+  yearsAsPermanentResident: number;
+  isMarriedToUSCitizen: boolean;
+  yearsMarriedToCitizen?: number;
+  monthsPhysicallyPresentInUS: number;
+  hasContinuousResidence: boolean;
+  monthsInCurrentState: number;
+  registeredSelectiveService: boolean;
+  filedRequiredTaxes: boolean;
+  hasGoodMoralCharacter: boolean;
+  willingToTakeOath: boolean;
+  basicEnglishAndCivics: boolean;
+}
+
+// --- AUSTRALIA (Australian Citizenship Act 2007 - Conferral) ---
+export interface AUEligibilityInput {
+  yearsInAustralia: number;
+  monthsAsPermanentResident: number;
+  daysAbsentLast4Years: number;
+  daysAbsentLast12Months: number;
+  passesCharacterTest: boolean;
+  understandsEnglishAndValues: boolean;
+  plansToResideInAustralia: boolean;
+}
+
 export interface EligibilityResult {
-  track: EligibilityTrack;
   isEligibleNow: boolean;
-  confidenceScore: number; // 0-100%
-  headline: {
-    en: string;
-    de: string;
-  };
-  summary: {
-    en: string;
-    de: string;
-  };
+  confidenceScore: number;
+  headline: { en: string; de: string };
+  summary: { en: string; de: string };
   qualifyingLegalBasis: string;
   passedCriteria: string[];
   missingCriteria: {
@@ -66,10 +89,8 @@ export interface EligibilityResult {
     actionTip: { en: string; de: string };
   }[];
   recommendedNextSteps: { en: string; de: string }[];
-  countrySpecificAdvice?: {
-    en: string;
-    de: string;
-  };
+  track?: EligibilityTrack;
+  countrySpecificAdvice?: { en: string; de: string };
 }
 
 export interface RoadmapStep {
@@ -104,7 +125,7 @@ export interface DocumentItem {
 export interface TipItem {
   id: string;
   title: { en: string; de: string };
-  category: 'timeline' | 'documents' | 'legal' | 'career' | 'dual_citizenship' | 'turbo' | 'countries';
+  category: string;
   badge: { en: string; de: string };
   summary: { en: string; de: string };
   content: { en: string; de: string };
@@ -119,8 +140,9 @@ export interface QuizQuestion {
   options: { en: string; de: string }[];
   correctIndex: number;
   explanation: { en: string; de: string };
+  category: string;
   is2024New?: boolean;
-  category: 'law_constitution' | 'history_responsibility' | 'daily_life' | 'israel_jewish_life';
+  isSpecialBenchmark?: boolean;
 }
 
 export interface LetterTemplate {
@@ -130,6 +152,19 @@ export interface LetterTemplate {
   recommendedTiming: { en: string; de: string };
   fields: { id: string; label: { en: string; de: string }; placeholder: string; defaultValue?: string }[];
   generateText: (fields: Record<string, string>) => string;
+}
+
+export interface CountryMetadata {
+  id: CountryCode;
+  name: { en: string; de: string };
+  flag: string;
+  passportColor: string;
+  badge: { en: string; de: string };
+  governingLaw: string;
+  applicationAuthority: string;
+  standardFee: string;
+  standardTimeline: string;
+  dualCitizenshipStatus: { en: string; de: string };
 }
 
 export interface CityGuide {

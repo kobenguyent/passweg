@@ -10,7 +10,7 @@ import {
   Building,
   ArrowRightLeft
 } from 'lucide-react';
-import { Language } from '../types';
+import { Language, CountryGuideData } from '../types';
 import { countryGuidesData } from '../data/countryGuides';
 
 interface CountryGuidesProps {
@@ -24,7 +24,7 @@ export const CountryGuides: React.FC<CountryGuidesProps> = ({
 }) => {
   const [activeCountry, setActiveCountry] = useState<'us' | 'au'>('us');
 
-  const guide = countryGuidesData.find((g) => g.id === activeCountry) || countryGuidesData[0];
+  const guide: CountryGuideData = countryGuidesData.find((g) => g.id === activeCountry) || countryGuidesData[0];
 
   return (
     <div className="py-12 bg-slate-50 min-h-screen">

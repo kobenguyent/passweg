@@ -11,18 +11,23 @@ import { CityDirectory } from './components/CityDirectory';
 import { CountryGuides } from './components/CountryGuides';
 import { FaqSection } from './components/FaqSection';
 import { Footer } from './components/Footer';
-import { Language } from './types';
+import { Language, CountryCode } from './types';
 
 export const App: React.FC = () => {
   const [language, setLanguage] = useState<Language>('en');
+  const [currentCountry, setCurrentCountry] = useState<CountryCode>('de');
   const [currentTab, setCurrentTab] = useState<string>('roadmap');
 
   useEffect(() => {
     try {
       if (typeof window !== 'undefined' && window.localStorage) {
-        const saved = window.localStorage.getItem('passweg_lang');
-        if (saved === 'de' || saved === 'en') {
-          setLanguage(saved);
+        const savedLang = window.localStorage.getItem('passweg_lang');
+        if (savedLang === 'de' || savedLang === 'en') {
+          setLanguage(savedLang);
+        }
+        const savedCountry = window.localStorage.getItem('passweg_country') as CountryCode;
+        if (savedCountry === 'de' || savedCountry === 'us' || savedCountry === 'au') {
+          setCurrentCountry(savedCountry);
         }
       }
     } catch {
@@ -35,6 +40,17 @@ export const App: React.FC = () => {
     try {
       if (typeof window !== 'undefined' && window.localStorage) {
         window.localStorage.setItem('passweg_lang', lang);
+      }
+    } catch {
+      // fallback
+    }
+  };
+
+  const handleCountryChange = (country: CountryCode) => {
+    setCurrentCountry(country);
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.setItem('passweg_country', country);
       }
     } catch {
       // fallback
@@ -54,11 +70,15 @@ export const App: React.FC = () => {
         setCurrentTab={setCurrentTab}
         language={language}
         setLanguage={handleLanguageChange}
+        currentCountry={currentCountry}
+        setCurrentCountry={handleCountryChange}
       />
 
       {/* Hero Section */}
       <Hero
         language={language}
+        currentCountry={currentCountry}
+        setCurrentCountry={handleCountryChange}
         onStartCalculator={() => handleSelectTabAndScroll('calculator')}
         onExploreRoadmap={() => handleSelectTabAndScroll('roadmap')}
         onOpenChecklist={() => handleSelectTabAndScroll('checklist')}
@@ -67,10 +87,14 @@ export const App: React.FC = () => {
 
       {/* Main Content Body based on tab */}
       <main className="flex-1">
-        {currentTab === 'roadmap' && <ProcessRoadmap language={language} />}
+        {currentTab === 'roadmap' && (
+          <ProcessRoadmap language={language} currentCountry={currentCountry} />
+        )}
         {currentTab === 'calculator' && (
           <EligibilityCalculator
             language={language}
+            currentCountry={currentCountry}
+            setCurrentCountry={handleCountryChange}
             onNavigateToChecklist={() => handleSelectTabAndScroll('checklist')}
             onNavigateToLetters={() => handleSelectTabAndScroll('letters')}
             onNavigateToCountries={() => handleSelectTabAndScroll('countries')}
@@ -82,15 +106,22 @@ export const App: React.FC = () => {
             onNavigateToCalculator={() => handleSelectTabAndScroll('calculator')}
           />
         )}
-        {currentTab === 'checklist' && <DocumentChecklist language={language} />}
+        {currentTab === 'checklist' && (
+          <DocumentChecklist language={language} currentCountry={currentCountry} />
+        )}
         {currentTab === 'tips' && (
           <TipsAndTricks
             language={language}
+            currentCountry={currentCountry}
             onNavigateToLetters={() => handleSelectTabAndScroll('letters')}
           />
         )}
-        {currentTab === 'quiz' && <NaturalizationQuiz language={language} />}
-        {currentTab === 'letters' && <LetterGenerator language={language} />}
+        {currentTab === 'quiz' && (
+          <NaturalizationQuiz language={language} currentCountry={currentCountry} />
+        )}
+        {currentTab === 'letters' && (
+          <LetterGenerator language={language} currentCountry={currentCountry} />
+        )}
         {currentTab === 'cities' && <CityDirectory language={language} />}
 
         {/* Global FAQ & Glossary Section */}
