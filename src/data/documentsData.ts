@@ -40,8 +40,8 @@ export const documentsData: DocumentItem[] = [
     },
     officialLink: 'https://www.justiz-dolmetscher.de',
     tip: {
-      en: 'Multilingual CIEC birth certificates from EU or signatory states do not need translation.',
-      de: 'Internationale mehrsprachige CIEC-Urkunden benötigen keine Übersetzung.'
+      en: '🇺🇸 US: Obtain Apostille from your birth State Secretary of State. 🇦🇺 Australia: Obtain Apostille from DFAT (Smartraveller) on standard BDM certificate.',
+      de: '🇺🇸 USA: Apostille beim Secretary of State Ihres Geburtsstaates einholen. 🇦🇺 Australien: Apostille bei DFAT (Smartraveller) auf Standard-BDM-Urkunde beantragen.'
     }
   },
   {

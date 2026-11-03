@@ -7,6 +7,7 @@ interface HeroProps {
   onStartCalculator: () => void;
   onExploreRoadmap: () => void;
   onOpenChecklist: () => void;
+  onOpenCountries?: () => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({
@@ -14,6 +15,7 @@ export const Hero: React.FC<HeroProps> = ({
   onStartCalculator,
   onExploreRoadmap,
   onOpenChecklist,
+  onOpenCountries,
 }) => {
   return (
     <div className="relative overflow-hidden bg-gradient-to-b from-passport-950 via-passport-900 to-slate-900 text-white pt-12 pb-16 sm:pt-16 sm:pb-24">
@@ -83,6 +85,22 @@ export const Hero: React.FC<HeroProps> = ({
               <span>{language === 'en' ? 'Document Checklist' : 'Unterlagen-Checkliste'}</span>
             </button>
           </div>
+
+          {onOpenCountries && (
+            <div className="mt-5">
+              <button
+                onClick={onOpenCountries}
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 text-xs text-slate-300 hover:text-white border border-white/10 transition-all"
+              >
+                <span>🇺🇸 🇦🇺</span>
+                <span className="font-medium">
+                  {language === 'en'
+                    ? 'American or Australian Citizen? View Dual Citizenship & Tax Rules →'
+                    : 'US- oder australischer Staatsbürger? Zum Doppelpass- & Steuer-Guide →'}
+                </span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Feature Highlights Grid */}

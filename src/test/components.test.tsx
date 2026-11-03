@@ -64,4 +64,15 @@ describe('PassWeg Application Component Suite', () => {
       expect(screen.getByText(/Official Correspondence Templates/i)).toBeInTheDocument();
     }
   });
+
+  it('switches navigation tab to US & Australia Country Guide', () => {
+    render(<App />);
+    const buttons = screen.getAllByRole('button');
+    const countryBtn = buttons.find(b => b.textContent?.includes('US & Australia'));
+    expect(countryBtn).toBeDefined();
+    if (countryBtn) {
+      fireEvent.click(countryBtn);
+      expect(screen.getByText(/Dual Citizenship for US & Australian Citizens/i)).toBeInTheDocument();
+    }
+  });
 });

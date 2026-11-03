@@ -8,6 +8,7 @@ import { TipsAndTricks } from './components/TipsAndTricks';
 import { NaturalizationQuiz } from './components/NaturalizationQuiz';
 import { LetterGenerator } from './components/LetterGenerator';
 import { CityDirectory } from './components/CityDirectory';
+import { CountryGuides } from './components/CountryGuides';
 import { FaqSection } from './components/FaqSection';
 import { Footer } from './components/Footer';
 import { Language } from './types';
@@ -61,6 +62,7 @@ export const App: React.FC = () => {
         onStartCalculator={() => handleSelectTabAndScroll('calculator')}
         onExploreRoadmap={() => handleSelectTabAndScroll('roadmap')}
         onOpenChecklist={() => handleSelectTabAndScroll('checklist')}
+        onOpenCountries={() => handleSelectTabAndScroll('countries')}
       />
 
       {/* Main Content Body based on tab */}
@@ -71,6 +73,13 @@ export const App: React.FC = () => {
             language={language}
             onNavigateToChecklist={() => handleSelectTabAndScroll('checklist')}
             onNavigateToLetters={() => handleSelectTabAndScroll('letters')}
+            onNavigateToCountries={() => handleSelectTabAndScroll('countries')}
+          />
+        )}
+        {currentTab === 'countries' && (
+          <CountryGuides
+            language={language}
+            onNavigateToCalculator={() => handleSelectTabAndScroll('calculator')}
           />
         )}
         {currentTab === 'checklist' && <DocumentChecklist language={language} />}

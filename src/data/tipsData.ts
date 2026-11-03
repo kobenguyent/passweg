@@ -275,5 +275,77 @@ Gesetzlich ausschließend nach § 10 Abs. 1 Nr. 3 StAG:
       de: 'Kindergeld und Elterngeld sind Rechtsansprüche und schaden der Einbürgerung in keiner Weise.'
     },
     relevanceTag: 'SGB II vs SGB XII'
+  },
+  {
+    id: 'us-citizen-dual-guide',
+    title: {
+      en: '🇺🇸 US Citizens in Germany: Keeping Your Blue Passport, IRS Rules & Apostilles',
+      de: '🇺🇸 US-Bürger in Deutschland: Doppelter Pass, IRS-Steuern & Bundesstaat-Apostillen'
+    },
+    category: 'countries',
+    country: 'us',
+    badge: {
+      en: 'USA Dual Citizenship',
+      de: 'USA Doppelpass'
+    },
+    summary: {
+      en: 'American expats can now naturalize in Germany without losing their US citizenship. Here are the critical rules for state apostilles, IRS Form 1040/FBAR, and border control.',
+      de: 'Amerikaner in Deutschland können sich jetzt einbürgern lassen, ohne die US-Staatsbürgerschaft zu verlieren. Das gilt für US-Apostillen, IRS/FBAR-Steuerpflicht und Grenzübertritte.'
+    },
+    content: {
+      en: `Under 8 U.S.C. § 1481 and U.S. Supreme Court jurisprudence (Afroyim v. Rusk, Vance v. Terrazas), applying for and receiving a foreign citizenship does NOT revoke your U.S. citizenship unless done voluntarily with explicit intent to relinquish.
+
+Key Action Points for American Applicants:
+1. Birth Certificate Apostille: Must be requested from the Secretary of State of the state where you were born (not the federal State Department unless it was a Consular Report of Birth Abroad FS-240).
+2. Worldwide Tax Obligation (IRS): German citizenship does not end your U.S. tax filing obligations. You must continue filing IRS Form 1040 and FinCEN 114 (FBAR) if non-US accounts exceed $10,000 USD.
+3. Travel Rule (8 U.S.C. § 1185b): When traveling to the USA, you MUST enter and depart on your U.S. passport. When entering Germany, you MUST use your German passport (§ 1 PassG). Never apply for an ESTA with your German passport!`,
+      de: `Nach US-Bundesrecht (8 U.S.C. § 1481) und höchstrichterlicher Rechtsprechung führt der Erwerb einer ausländischen Staatsbürgerschaft nicht zum Verlust der US-Staatsangehörigkeit.
+
+Wichtigste Punkte für US-Bürger:
+1. Apostille auf die Geburtsurkunde: Muss beim Secretary of State des Bundesstaates der Geburt eingeholt werden.
+2. US-Steuerpflicht (IRS): Die Einbürgerung entbindet nicht von der weltweiten US-Steuererklärung (Form 1040) und der FBAR-Meldung (FinCEN 114) bei Bankkonten über 10.000 USD.
+3. Reisepflicht: Bei Einreise in die USA MUSS der US-Pass vorgelegt werden (8 U.S.C. § 1185b). Bei Einreise nach Deutschland der deutsche Pass (§ 1 PassG). Niemals ein ESTA beantragen!`
+    },
+    actionableStep: {
+      en: 'Order a fresh long-form certified birth certificate from your birth state Vital Records office via VitalChek before requesting the state Apostille.',
+      de: 'Vor Beantragung der Apostille eine frische Long-Form-Geburtsurkunde beim Standesamt Ihres US-Geburtsstaates anfordern.'
+    },
+    relevanceTag: '8 U.S.C. 1481 / IRS'
+  },
+  {
+    id: 'australian-citizen-dual-guide',
+    title: {
+      en: '🇦🇺 Australian Citizens: Automatic Dual Nationality, DFAT Apostilles & Superannuation',
+      de: '🇦🇺 Australische Staatsbürger: Automatische Mehrstaatigkeit, DFAT-Apostillen & Super'
+    },
+    category: 'countries',
+    country: 'au',
+    badge: {
+      en: 'Australia Dual Citizenship',
+      de: 'Australien Doppelpass'
+    },
+    summary: {
+      en: 'Since Australia repealed Section 17 in 2002, Australian citizens automatically keep their Australian passport when becoming German. How DFAT apostilles and superannuation work.',
+      de: 'Seit der Aufhebung von Section 17 im Jahr 2002 behalten Australier ihren Pass vollkommen automatisch. Ablauf der DFAT-Apostille und Schutz der Superannuation.'
+    },
+    content: {
+      en: `Australian citizens are completely free to hold dual nationality. Section 17 of the Australian Citizenship Act 1948 was abolished on 4 April 2002.
+
+Crucial Checklist for Australian Applicants:
+1. Birth Certificate Apostille via DFAT: Standard state Registry of Births, Deaths and Marriages (BDM) certificates can be apostilled via Smartraveller / DFAT in Australia or at the Australian Embassy in Berlin / Consulate-General in Frankfurt.
+2. Superannuation is Safe: Your super accounts in Australia remain intact and tax-sheltered until preservation age (60). Naturalizing in Germany has no effect on your super.
+3. Travel Rule: Under the Australian Passports Act 2005, you must enter and exit Australia on your Australian passport, while using your German passport in Schengen (§ 1 PassG). No ETA visa is required or permitted for Australian citizens!
+4. Australian Police Check: If asked for a home country background check, order a National Police Check (Code 33) from the Australian Federal Police (AFP) with a DFAT Apostille.`,
+      de: `Australische Staatsbürger genießen volle Reise- und Bürgerrechte:
+1. DFAT-Apostille: Standard-Urkunden des BDM-Standesamtes über Smartraveller (DFAT) oder die australische Botschaft in Berlin / Generalkonsulat Frankfurt überbeglaubigen lassen.
+2. Superannuation bleibt geschützt: Guthaben in australischen Super-Fonds bleiben bis zum Alter 60 steuerbegünstigt angelegt.
+3. Reisepass-Pflicht: Bei Einreise nach Australien stets den australischen Pass vorzeigen (Australian Passports Act 2005), in Deutschland den deutschen Pass (§ 1 PassG).
+4. AFP-Führungszeugnis: Falls ein ausländisches Führungszeugnis gefordert wird, den National Police Check (Code 33) bei der Australian Federal Police (AFP) mit DFAT-Apostille anfordern.`
+    },
+    actionableStep: {
+      en: 'Ensure your Australian BDM birth certificate is an official standard certificate and not a decorative commemorative certificate (which DFAT cannot apostille).',
+      de: 'Sicherstellen, dass die australische BDM-Geburtsurkunde das offizielle Standardformat hat (keine dekorativen Schmuckurkunden).'
+    },
+    relevanceTag: 'DFAT / Section 17'
   }
 ];

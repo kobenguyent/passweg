@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, FileCheck, CheckCircle2, Lightbulb, GraduationCap, Mail, Building2, Globe } from 'lucide-react';
+import { Compass, FileCheck, CheckCircle2, Lightbulb, GraduationCap, Mail, Building2, Globe, Globe2 } from 'lucide-react';
 import { Language } from '../types';
 
 interface NavbarProps {
@@ -18,6 +18,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navItems = [
     { id: 'roadmap', label: { en: 'Roadmap', de: 'Ablauf' }, icon: Compass },
     { id: 'calculator', label: { en: 'Eligibility', de: 'Voraussetzungen' }, icon: CheckCircle2 },
+    { id: 'countries', label: { en: 'US & Australia', de: 'USA & Australien' }, icon: Globe2 },
     { id: 'checklist', label: { en: 'Checklist', de: 'Unterlagen' }, icon: FileCheck },
     { id: 'tips', label: { en: 'Tips & Hacks', de: 'Tipps & Tricks' }, icon: Lightbulb },
     { id: 'quiz', label: { en: 'Practice Quiz', de: 'Einbürgerungstest' }, icon: GraduationCap },

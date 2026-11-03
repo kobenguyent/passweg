@@ -267,6 +267,20 @@ export function calculateEligibility(input: EligibilityInput): EligibilityResult
     track === 'standard_5_year' ? '§ 10 Abs. 1 StAG (Anspruchseinbürgerung)' :
     'StAG Vorbereitung';
 
+  // Country-specific advice
+  let countrySpecificAdvice: { en: string; de: string } | undefined;
+  if (input.countryOfOrigin === 'us') {
+    countrySpecificAdvice = {
+      en: '🇺🇸 US Citizens: You can keep your US citizenship 100%! The US does not revoke citizenship upon foreign naturalization. Remember: you still retain US tax filing (IRS Form 1040/FBAR) and must enter/exit the US using your US passport.',
+      de: '🇺🇸 US-Staatsbürger: Sie behalten Ihre US-Staatsbürgerschaft zu 100 %! Die USA entziehen bei Einbürgerung im Ausland nicht die Nationalität. Beachten Sie: US-Steuererklärungspflicht (IRS/FBAR) bleibt bestehen, und bei USA-Reisen muss der US-Pass genutzt werden.'
+    };
+  } else if (input.countryOfOrigin === 'au') {
+    countrySpecificAdvice = {
+      en: '🇦🇺 Australian Citizens: Dual citizenship is fully allowed! Australia abolished citizenship loss upon foreign naturalization in 2002. Obtain your birth certificate Apostille via DFAT and remember to enter/exit Australia using your Australian passport.',
+      de: '🇦🇺 Australische Staatsbürger: Vollwertige doppelte Staatsbürgerschaft garantiert! Australien hat den Verlust bei Auslandseinbürgerung bereits 2002 abgeschafft. Geburtsurkunde via DFAT überbeglaubigen lassen und bei Australien-Reisen den australischen Pass nutzen.'
+    };
+  }
+
   return {
     track,
     isEligibleNow,
@@ -276,6 +290,7 @@ export function calculateEligibility(input: EligibilityInput): EligibilityResult
     qualifyingLegalBasis,
     passedCriteria,
     missingCriteria,
-    recommendedNextSteps
+    recommendedNextSteps,
+    countrySpecificAdvice
   };
 }

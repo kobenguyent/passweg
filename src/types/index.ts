@@ -23,6 +23,8 @@ export type EmploymentStatus =
   | 'unemployed_buergergeld'
   | 'pensioner';
 
+export type CountryOrigin = 'all' | 'us' | 'au' | 'other';
+
 export interface EligibilityInput {
   yearsInGermany: number;
   permitType: ResidencePermitType;
@@ -34,6 +36,7 @@ export interface EligibilityInput {
   isMarriedToGerman: boolean;
   yearsMarried?: number;
   acceptsDemocraticOrder: boolean;
+  countryOfOrigin?: CountryOrigin;
 }
 
 export type EligibilityTrack = 
@@ -63,6 +66,10 @@ export interface EligibilityResult {
     actionTip: { en: string; de: string };
   }[];
   recommendedNextSteps: { en: string; de: string }[];
+  countrySpecificAdvice?: {
+    en: string;
+    de: string;
+  };
 }
 
 export interface RoadmapStep {
@@ -88,17 +95,22 @@ export interface DocumentItem {
   howToGet: { en: string; de: string };
   officialLink?: string;
   tip?: { en: string; de: string };
+  countrySpecific?: {
+    country: 'us' | 'au';
+    note: { en: string; de: string };
+  };
 }
 
 export interface TipItem {
   id: string;
   title: { en: string; de: string };
-  category: 'timeline' | 'documents' | 'legal' | 'career' | 'dual_citizenship' | 'turbo';
+  category: 'timeline' | 'documents' | 'legal' | 'career' | 'dual_citizenship' | 'turbo' | 'countries';
   badge: { en: string; de: string };
   summary: { en: string; de: string };
   content: { en: string; de: string };
   actionableStep?: { en: string; de: string };
   relevanceTag: string;
+  country?: 'us' | 'au';
 }
 
 export interface QuizQuestion {
@@ -130,4 +142,38 @@ export interface CityGuide {
   applicationMode: '100% Online' | 'Hybrid (Paper + Online)' | 'Appointment only';
   keyInsight: { en: string; de: string };
   contactTip: { en: string; de: string };
+}
+
+export interface CountryGuideData {
+  id: 'us' | 'au';
+  name: { en: string; de: string };
+  flag: string;
+  passportName: { en: string; de: string };
+  tagline: { en: string; de: string };
+  dualCitizenshipLegality: {
+    isAllowedByOrigin: boolean;
+    legalBasis: string;
+    summary: { en: string; de: string };
+  };
+  apostilleGuide: {
+    authority: string;
+    howToStepByStep: { en: string; de: string }[];
+    costs: string;
+    processingTime: string;
+    officialLink: string;
+  };
+  travelRules: {
+    leavingGermany: { en: string; de: string };
+    enteringHomeCountry: { en: string; de: string };
+    statutoryLaw: string;
+  };
+  taxAndFinance: {
+    summary: { en: string; de: string };
+    keyObligations: { title: string; desc: { en: string; de: string } }[];
+  };
+  consularServicesInGermany: {
+    name: string;
+    locations: string[];
+    website: string;
+  };
 }

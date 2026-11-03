@@ -46,6 +46,11 @@ export const Footer: React.FC<FooterProps> = ({ language, onSelectTab }) => {
                 </button>
               </li>
               <li>
+                <button onClick={() => onSelectTab('countries')} className="hover:text-white transition">
+                  {language === 'en' ? 'US & Australian Citizens' : 'USA- & Australien-Guide'}
+                </button>
+              </li>
+              <li>
                 <button onClick={() => onSelectTab('checklist')} className="hover:text-white transition">
                   {language === 'en' ? 'Document Checklist' : 'Unterlagen-Checkliste'}
                 </button>

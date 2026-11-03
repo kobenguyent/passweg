@@ -14,7 +14,8 @@ import {
   Language, 
   ResidencePermitType, 
   LanguageLevel, 
-  EmploymentStatus 
+  EmploymentStatus,
+  CountryOrigin 
 } from '../types';
 import { calculateEligibility } from '../utils/eligibility';
 import { triggerCelebration } from '../utils/confetti';
@@ -23,13 +24,16 @@ interface EligibilityCalculatorProps {
   language: Language;
   onNavigateToChecklist: () => void;
   onNavigateToLetters: () => void;
+  onNavigateToCountries?: () => void;
 }
 
 export const EligibilityCalculator: React.FC<EligibilityCalculatorProps> = ({
   language,
   onNavigateToChecklist,
-  onNavigateToLetters
+  onNavigateToLetters,
+  onNavigateToCountries
 }) => {
+  const [countryOfOrigin, setCountryOfOrigin] = useState<CountryOrigin>('all');
   const [years, setYears] = useState<number>(5);
   const [permitType, setPermitType] = useState<ResidencePermitType>('blue_card');
   const [languageLevel, setLanguageLevel] = useState<LanguageLevel>('b1');
@@ -51,7 +55,8 @@ export const EligibilityCalculator: React.FC<EligibilityCalculatorProps> = ({
     hasCleanCriminalRecord: hasCleanRecord,
     isMarriedToGerman,
     yearsMarried: isMarriedToGerman ? yearsMarried : 0,
-    acceptsDemocraticOrder
+    acceptsDemocraticOrder,
+    countryOfOrigin
   }), [
     years, 
     permitType, 
@@ -62,7 +67,8 @@ export const EligibilityCalculator: React.FC<EligibilityCalculatorProps> = ({
     hasCleanRecord, 
     isMarriedToGerman, 
     yearsMarried, 
-    acceptsDemocraticOrder
+    acceptsDemocraticOrder,
+    countryOfOrigin
   ]);
 
   const result = useMemo(() => {
@@ -76,6 +82,7 @@ export const EligibilityCalculator: React.FC<EligibilityCalculatorProps> = ({
   };
 
   const resetForm = () => {
+    setCountryOfOrigin('all');
     setYears(5);
     setPermitType('blue_card');
     setLanguageLevel('b1');
@@ -122,6 +129,53 @@ export const EligibilityCalculator: React.FC<EligibilityCalculatorProps> = ({
                 <RotateCcw className="w-3 h-3" />
                 <span>{language === 'en' ? 'Reset' : 'Zurücksetzen'}</span>
               </button>
+            </div>
+
+            {/* Country of Origin / Nationality Selector */}
+            <div>
+              <label className="block text-sm font-bold text-slate-800 mb-2">
+                {language === 'en' ? 'Current Nationality / Passport' : 'Bisherige Staatsangehörigkeit'}
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setCountryOfOrigin('all')}
+                  className={`p-2.5 rounded-xl border text-center transition-all ${
+                    countryOfOrigin === 'all'
+                      ? 'border-passport-800 bg-passport-50 text-passport-900 font-bold ring-1 ring-passport-800'
+                      : 'border-slate-200 hover:border-slate-300 text-slate-700'
+                  }`}
+                >
+                  <span className="text-base block mb-0.5">🌐</span>
+                  <span className="text-xs font-semibold">{language === 'en' ? 'General / Other' : 'Allgemein'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setCountryOfOrigin('us')}
+                  className={`p-2.5 rounded-xl border text-center transition-all ${
+                    countryOfOrigin === 'us'
+                      ? 'border-passport-800 bg-passport-50 text-passport-900 font-bold ring-1 ring-passport-800'
+                      : 'border-slate-200 hover:border-slate-300 text-slate-700'
+                  }`}
+                >
+                  <span className="text-base block mb-0.5">🇺🇸</span>
+                  <span className="text-xs font-semibold">{language === 'en' ? 'United States' : 'USA'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setCountryOfOrigin('au')}
+                  className={`p-2.5 rounded-xl border text-center transition-all ${
+                    countryOfOrigin === 'au'
+                      ? 'border-passport-800 bg-passport-50 text-passport-900 font-bold ring-1 ring-passport-800'
+                      : 'border-slate-200 hover:border-slate-300 text-slate-700'
+                  }`}
+                >
+                  <span className="text-base block mb-0.5">🇦🇺</span>
+                  <span className="text-xs font-semibold">{language === 'en' ? 'Australia' : 'Australien'}</span>
+                </button>
+              </div>
             </div>
 
             {/* 1. Years in Germany */}
@@ -388,6 +442,26 @@ export const EligibilityCalculator: React.FC<EligibilityCalculatorProps> = ({
               <div className="mt-4 p-2.5 rounded-lg bg-slate-100/80 border border-slate-200 text-xs font-mono font-semibold text-slate-700">
                 ⚖️ {result.qualifyingLegalBasis}
               </div>
+
+              {/* Country Specific Advice Box if US or AU */}
+              {result.countrySpecificAdvice && (
+                <div className="mt-4 p-3.5 rounded-xl bg-blue-50/80 border border-blue-200 text-xs text-blue-950 space-y-1.5">
+                  <div className="font-bold flex items-center justify-between">
+                    <span>{countryOfOrigin === 'us' ? '🇺🇸 US Expat Advisory' : '🇦🇺 Aussie Expat Advisory'}</span>
+                    {onNavigateToCountries && (
+                      <button
+                        onClick={onNavigateToCountries}
+                        className="text-[11px] font-bold text-blue-700 hover:underline"
+                      >
+                        {language === 'en' ? 'Full Country Guide →' : 'Länder-Guide →'}
+                      </button>
+                    )}
+                  </div>
+                  <p className="leading-relaxed text-blue-900">
+                    {result.countrySpecificAdvice[language]}
+                  </p>
+                </div>
+              )}
 
               {/* Missing Criteria list if any */}
               {result.missingCriteria.length > 0 && (
