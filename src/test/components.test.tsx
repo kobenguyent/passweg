@@ -95,4 +95,21 @@ describe('PassWeg Multi-Country Application Component Suite', () => {
       expect(screen.getByText(/Dual Citizenship for US & Australian Citizens/i)).toBeInTheDocument();
     }
   });
+
+  it('maintains balanced, single-source navigation rail with whitespace-nowrap and ARIA states across all resolutions', () => {
+    render(<App />);
+    const nav = screen.getByRole('navigation', { name: /Primary toolkit navigation/i });
+    expect(nav).toBeInTheDocument();
+
+    const navButtons = nav.querySelectorAll('button');
+    // Germany has 8 navigation items (including Cities)
+    expect(navButtons.length).toBe(8);
+    navButtons.forEach((btn) => {
+      expect(btn.className).toContain('whitespace-nowrap');
+      expect(btn.className).toContain('shrink-0');
+    });
+
+    // Roadmap is active by default
+    expect(navButtons[0].getAttribute('aria-current')).toBe('page');
+  });
 });
